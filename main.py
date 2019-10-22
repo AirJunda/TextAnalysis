@@ -258,3 +258,6 @@ def compare_to_brown(text):
         catvec = category_vectors[cat]
         cosine = text_vector.cosine(catvec)
         print("   %-12s %.2f" % (cat, cosine))
+
+
+emma = read_text('data/emma.txt')
