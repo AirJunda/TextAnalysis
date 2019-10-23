@@ -86,7 +86,7 @@ class FSA():
         if not curstate in self.final_states:
             return False
         else:
-            return start, idx  # 这里的idx刚好是(match的idx +1)
+            return start, idx  # 这里的idx刚好是(match的idx +1)  这里返回的是（start,idx）
         
         
         
