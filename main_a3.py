@@ -31,6 +31,7 @@ class FSA():
         self.final_states = final_states
         self.transitions = transitions
         self.table = self.buildTable()
+ 
         
     def buildTable(self):
         transtable = {}
@@ -50,18 +51,43 @@ class FSA():
                 print("<State " + state + ">")
             for key in self.table[state]:
                 print(key + " --> "+  self.table[state][key])
-
-        
-        
-    
+ 
     def accept(self,string):
         idx = 0
         curstate = self.states[0]
         table = self.table
-        while idx < len(string):
-            
-            
-            nextstate = table
+        while idx <= len(string)-1:
+            tape = string[idx]     
+            if tape in table[curstate].keys(): 
+                nextstate = table[curstate][tape]
+                curstate = nextstate
+                idx += 1
+            else:
+                return False
+        if not curstate in self.final_states:  # or in states??
+            return False
+        else:
+            return True
+        
+    def accept2(self,start,tokens):
+        idx = start
+        curstate = self.states[0]
+        table = self.table
+        while idx <= len(tokens)-1:
+            if curstate in self.final_states:
+                return start, idx
+            tape = tokens[idx]     
+            if tape in table[curstate].keys(): 
+                nextstate = table[curstate][tape]
+                curstate = nextstate
+                idx += 1
+            else:
+                return False
+        if not curstate in self.final_states:
+            return False
+        else:
+            return start, idx  # 这里的idx刚好是(match的idx +1)
+        
         
         
         
@@ -97,6 +123,22 @@ class Text(object):
 #            raw = corpus.raw()
 #            self.text = nltk.Text(nltk.word_tokenize(raw))
 #            self.text_to_str = corpus.raw()
+    def apply_fsa(self,fsa):
+        all_tokens = self.text.tokens
+        result = []
+        i = 0
+        while i < len(all_tokens):
+            
+            if fsa.accept2(i,all_tokens) != False:
+                start,end = fsa.accept2(i,all_tokens)
+    
+            target = all_tokens[start:end]
+            result.append((start, " ".join(target)))
+            i += 1
+        
+        return result
+    
+
     def __len__(self):
         return len(self.text_to_str)
         #return len(self.text)
@@ -254,7 +296,7 @@ class Vocabulary(object):
         self.text.concordance(word)        
         
 #     
-#grail = Text('data/grail.txt')
+grail = Text('data/grail.txt')
 #sirs = grail.find_sirs()
 #bracks = grail.find_brackets()
 #repeats = grail.find_repeated_words()
