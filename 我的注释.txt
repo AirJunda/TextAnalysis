@@ -1,0 +1,5 @@
+
+repeated word ?regex:
+"\b(\w+)\s+\1\b\s+\1\b"  MULTIIME: (\b\w+\b)(\s+\1)+
+
+I changed my logic to judge contentword based on professor's given answer.

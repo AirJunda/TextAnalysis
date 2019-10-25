@@ -1,0 +1,4 @@
+git add filename
+git commit -m xxxx
+git remote
+git push ass3origin master
